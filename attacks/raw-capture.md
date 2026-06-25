@@ -51,3 +51,12 @@
 - Durable artifact: account creation (4720), regardless of tool; strongest signal = 4720 followed by 4732 within seconds (fresh account given admin)
 - Notes: ART tests start at #4 (1-3 non-Windows). Test 4 needed a complexity-compliant password (-InputArgs) because the domain password policy (GPO) rejected the weak default - incidental confirmation the domain enforces policy. High-signal, low-FP technique; 4720->4732 sequence = key attacker pattern.
 - Status: confirmed in Splunk (4720 ✓, 4732 ✓)
+
+## T1218.005 — Mshta (Defense Evasion / LOLBin)
+- Test: #2 (Mshta executes inline VBScript)
+- Action: mshta.exe runs inline VBScript — trusted signed Windows binary used to execute attacker script (LOLBin)
+- Time run: 06/25/2026 02:26:42.906 PM
+- Telemetry seen: Sysmon EID 1 — Image=mshta.exe, ParentImage=cmd.exe, CommandLine = mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ...powershell.ps1...")
+- Durable artifact: mshta.exe execution with inline script / URL / .hta in CommandLine (EID 1)
+- Notes: high-signal, low-FP — mshta rarely runs benignly on a workstation. Stronger with ParentImage context (Office/script launching mshta = very suspicious).
+- Status: confirmed in Splunk (EID 1 ✓)
