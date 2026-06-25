@@ -7,7 +7,6 @@
   - PowerShell EID 4104: logged 4 script blocks. Key one = decoded payload "Write-Host 'Hello, from PowerShell!'"; also captured the    OBFUSCATED form (string-concat + gcm) showing why literal-match detection fails. Confirms 4104 reveals intent that EID 1's base64 hides.
 - Status: confirmed in Splunk (EID 1 ✓, 4104 ✓)
 
-
 ## T1547.001 — Registry Run Keys (Persistence)
 - Test: #1
 - Action: writes a value under HKCU\...\CurrentVersion\Run (auto-runs at login)
@@ -34,3 +33,12 @@
 - Durable artifact: NOT a single command — the behavioral burst (>=4 distinct discovery commands per host in 5 min)
 - Notes: domain sub-commands (T1087.002, T1069.002) RPC-failed (analyst=local, no domain rights) but still generated EID 1 events — detection fires on execution, not success. wmic sub-commands errored (removed in Win11), harmless. T1087.001 & T1069.001 had no Windows tests, excluded. User field shows NOT_TRANSLATED (Sysmon user-field parsing; Splunk Sysmon Add-on fixes it; non-blocking).
 - Status: confirmed in Splunk (EID 1 ✓, behavioral rule ✓)
+
+## T1003.001 — LSASS Memory (Credential Access)
+- Test: #2 (Dump LSASS via comsvcs.dll MiniDump)
+- Action: rundll32.exe calls comsvcs.dll MiniDump on lsass PID to dump its memory to a .dmp file
+- Time run: 06/25/2026 01:23:26.586 PM
+- Telemetry seen: Sysmon EID 1 (process creation) — rundll32.exe with CommandLine "comsvcs.dll MiniDump <lsass-pid> ...lsass-comsvcs.dmp full". EID 10 did NOT fire: PPL (RunAsPPL=2) blocked the memory access before a handle was opened, so no successful ProcessAccess was logged.
+- Durable artifact: comsvcs MiniDump command pattern (EID 1: comsvcs + MiniDump) — catches the attempt even when PPL blocks the access; complement with EID 10 read-access for non-PPL-blocked methods
+- Notes: EID 1 catches the tool execution (attempt); EID 10 catches successful memory read. PPL blocked the read, so only EID 1 fired — defense-in-depth working, detection still fires on the attempt. comsvcs+MiniDump is high-signal (almost nothing benign runs it).
+- Status: confirmed in Splunk (EID 1 ✓)
