@@ -1,0 +1,7 @@
+name: splunk-winevent-fieldnames
+priority: 100
+transformations:
+  - id: eventid_to_eventcode
+    type: field_name_mapping
+    mapping:
+      EventID: EventCode

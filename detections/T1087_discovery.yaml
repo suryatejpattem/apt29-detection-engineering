@@ -1,0 +1,29 @@
+title: Discovery Commands Execution
+id: a1b2c3d4-0005-0000-0000-000000000005
+status: experimental
+description: Detects execution of common discovery/enumeration commands. Behavioral thresholding (burst of distinct commands) applied in SIEM.
+references:
+  - https://attack.mitre.org/techniques/T1087/002/
+tags:
+  - attack.discovery
+  - attack.t1087.002
+  - attack.t1033
+  - attack.t1016
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    CommandLine|contains:
+      - 'whoami'
+      - 'net user'
+      - 'net group'
+      - 'net localgroup'
+      - 'nltest'
+      - 'systeminfo'
+      - 'ipconfig'
+      - 'arp'
+  condition: selection
+falsepositives:
+  - Administrators running diagnostic commands
+level: low

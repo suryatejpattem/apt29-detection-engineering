@@ -1,0 +1,21 @@
+title: LSASS Credential Dump via comsvcs
+id: a1b2c3d4-0006-0000-0000-000000000006
+status: experimental
+description: Detects LSASS memory dump attempts via comsvcs.dll MiniDump (rundll32 LOLBin).
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    CommandLine|contains|all:
+      - 'comsvcs'
+      - 'MiniDump'
+  condition: selection
+falsepositives:
+  - Virtually none; comsvcs MiniDump on a process is not legitimate admin activity
+level: high

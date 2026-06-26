@@ -1,0 +1,20 @@
+title: Registry Run Key Persistence
+id: a1b2c3d4-0002-0000-0000-000000000002
+status: experimental
+description: Detects creation/modification of a value under a Registry Run key, used for persistence.
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+tags:
+  - attack.persistence
+  - attack.t1547.001
+logsource:
+  category: registry_set
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    TargetObject|contains: '\CurrentVersion\Run\'
+  condition: selection
+falsepositives:
+  - Legitimate software registering auto-start entries
+level: medium
