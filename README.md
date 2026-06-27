@@ -1,4 +1,4 @@
-# APT29 Detection Engineering — Splunk + Sigma Home Lab
+# APT29 Detection Engineering
 
 A detection-engineering project covering the full lifecycle for 8 APT29 techniques:
 run the technique, capture the telemetry, write a Sigma rule, convert it to Splunk,
