@@ -41,7 +41,7 @@ jobs:
             if grep -q "service: security" "$rule"; then
               sigma convert -t splunk -p detections/splunk_winevent_pipeline.yml "$rule" || fail=1
             else
-              sigma convert -t splunk -p sysmon -p detections/splunk_winevent_pipeline.yml "$rule" || fail=1
+              sigma convert -t splunk -p sysmon -p detections/splunk_winevent_pipeline.yaml "$rule" || fail=1
             fi
           done
           if [ "$fail" -ne 0 ]; then
