@@ -182,3 +182,18 @@ creation of `wevtutil`, and PowerShell 4104.
 **6. Validate the field mapping before scaling.** The forwarded Windows logs use
 `EventCode`, not `EventID`. Rules converted cleanly but returned zero hits until the
 custom pipeline rewrote the field — caught on rule one, before writing the other seven.
+
+## Automation & validation
+
+The detection rules are treated as code. A GitHub Actions workflow
+(`.github/workflows/validate-rules.yml`) runs on every push that touches
+`detections/` and converts all Sigma rules to Splunk SPL with pySigma. If any
+rule stops compiling, the build fails — so a broken rule is caught immediately,
+not discovered later. This is the "detection-as-code" practice: version-controlled,
+automatically validated detections.
+
+The repo holds two forms of each detection:
+- `detections/*.yaml` — portable Sigma rules (the source of truth, validated by CI)
+- `detections/spl/*.spl` — the tuned Splunk queries actually deployed, including
+  the tuning logic (thresholds, correlation, target-SID extraction) that lives in
+  SPL rather than Sigma.
