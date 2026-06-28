@@ -1,3 +1,4 @@
+![Validate Sigma Rules](https://github.com/suryatejpattem/apt29-detection-engineering/actions/workflows/validate-rules.yml/badge.svg)
 # APT29 Detection Engineering
 
 A detection-engineering project covering the full lifecycle for 8 APT29 techniques:
